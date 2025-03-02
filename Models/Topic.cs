@@ -10,5 +10,11 @@ namespace EFCore_Session_Three_Relation.Models
     {
         public int ID { get; set; }
         public  required string Name { get; set; }
+
+        #region Topic has many courses
+
+        public ICollection<Course>? Course { get; set; }
+        #endregion
+
     }
 }

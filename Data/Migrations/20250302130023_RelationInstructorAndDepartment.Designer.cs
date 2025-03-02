@@ -4,6 +4,7 @@ using EFCore_Session_Three_Relation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCore_Session_Three_Relation.Data.Migrations
 {
     [DbContext(typeof(ITIContext))]
-    partial class ITIContextModelSnapshot : ModelSnapshot
+    [Migration("20250302130023_RelationInstructorAndDepartment")]
+    partial class RelationInstructorAndDepartment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,24 +53,6 @@ namespace EFCore_Session_Three_Relation.Data.Migrations
                     b.ToTable("courses");
                 });
 
-            modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Course_instructor", b =>
-                {
-                    b.Property<int>("InstructorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("evaluate")
-                        .HasColumnType("int");
-
-                    b.HasKey("InstructorId", "CourseId");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("Course_Instructors");
-                });
-
             modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Department", b =>
                 {
                     b.Property<int>("ID")
@@ -83,13 +68,7 @@ namespace EFCore_Session_Three_Relation.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("managerId")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
-
-                    b.HasIndex("managerId")
-                        .IsUnique();
 
                     b.ToTable("departments");
                 });
@@ -150,39 +129,9 @@ namespace EFCore_Session_Three_Relation.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("deparmentID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("departmentID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
 
-                    b.HasIndex("departmentID");
-
                     b.ToTable("students");
-                });
-
-            modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Student_Course", b =>
-                {
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Grade")
-                        .HasColumnType("int");
-
-                    b.HasKey("StudentId", "CourseId");
-
-                    b.HasIndex("CourseId")
-                        .IsUnique();
-
-                    b.HasIndex("StudentId")
-                        .IsUnique();
-
-                    b.ToTable("student_Courses");
                 });
 
             modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Topic", b =>
@@ -213,36 +162,6 @@ namespace EFCore_Session_Three_Relation.Data.Migrations
                     b.Navigation("topic");
                 });
 
-            modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Course_instructor", b =>
-                {
-                    b.HasOne("EFCore_Session_Three_Relation.Models.Course", "Course")
-                        .WithMany("course_Instructors")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EFCore_Session_Three_Relation.Models.Instructor", "instructor")
-                        .WithMany("course_Instructors")
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("instructor");
-                });
-
-            modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Department", b =>
-                {
-                    b.HasOne("EFCore_Session_Three_Relation.Models.Instructor", "manager")
-                        .WithOne("ManagerOfDept")
-                        .HasForeignKey("EFCore_Session_Three_Relation.Models.Department", "managerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("manager");
-                });
-
             modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Instructor", b =>
                 {
                     b.HasOne("EFCore_Session_Three_Relation.Models.Department", "department")
@@ -252,60 +171,9 @@ namespace EFCore_Session_Three_Relation.Data.Migrations
                     b.Navigation("department");
                 });
 
-            modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Student", b =>
-                {
-                    b.HasOne("EFCore_Session_Three_Relation.Models.Department", "department")
-                        .WithMany("students")
-                        .HasForeignKey("departmentID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("department");
-                });
-
-            modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Student_Course", b =>
-                {
-                    b.HasOne("EFCore_Session_Three_Relation.Models.Course", "Course")
-                        .WithOne("student_Course")
-                        .HasForeignKey("EFCore_Session_Three_Relation.Models.Student_Course", "CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EFCore_Session_Three_Relation.Models.Student", "Student")
-                        .WithOne("student_Course")
-                        .HasForeignKey("EFCore_Session_Three_Relation.Models.Student_Course", "StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Course", b =>
-                {
-                    b.Navigation("course_Instructors");
-
-                    b.Navigation("student_Course");
-                });
-
             modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Department", b =>
                 {
                     b.Navigation("instructors");
-
-                    b.Navigation("students");
-                });
-
-            modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Instructor", b =>
-                {
-                    b.Navigation("ManagerOfDept");
-
-                    b.Navigation("course_Instructors");
-                });
-
-            modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Student", b =>
-                {
-                    b.Navigation("student_Course");
                 });
 
             modelBuilder.Entity("EFCore_Session_Three_Relation.Models.Topic", b =>

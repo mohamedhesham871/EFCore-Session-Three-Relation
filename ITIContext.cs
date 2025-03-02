@@ -18,13 +18,49 @@ namespace EFCore_Session_Three_Relation
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            #region Topic and Course
+            modelBuilder.Entity<Topic>()
+                .HasMany(c => c.Course)
+                .WithOne(r => r.topic)
+                .HasForeignKey(r => r.topicID)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Course>()
+                .HasOne(c => c.topic)
+                .WithMany(x => x.Course)
+                .HasForeignKey(r => r.topicID)
+                .IsRequired(true);
+            #endregion
+            //---------------//
+            #region ins_ and Deparment
+            modelBuilder.Entity<Department>()
+                .HasMany(r => r.instructors)
+                .WithOne(t => t.department)
+                .IsRequired(false)
+                .HasForeignKey(r => r.departmentId); 
+            
+            modelBuilder.Entity<Instructor>()
+                .HasOne(r => r.department)
+                .WithMany(t => t.instructors)
+                .IsRequired(false)
+                .HasForeignKey(r => r.departmentId);
+            #endregion
+            //--------------//
+            #region Set Primary key for   Course instructor
+            modelBuilder.Entity<Course_instructor>().HasKey(e => new { e.InstructorId, e.CourseId });
+
+            #endregion
+            #region Set Primary Key for StudentCourse
+            modelBuilder.Entity<Student_Course>().HasKey(s => new { s.StudentId, s.CourseId });
+            #endregion
         }
         public DbSet<Student> students { get; set; }
         public DbSet<Department> departments { get; set; }
         public DbSet<Course> courses { get; set; }
         public DbSet<Instructor> instructors { get; set; }
         public DbSet<Topic> Topic { get; set; }
+        public DbSet<Course_instructor> Course_Instructors { get; set; }
+        public DbSet<Student_Course> student_Courses { get; set; }
 
     }
 }
