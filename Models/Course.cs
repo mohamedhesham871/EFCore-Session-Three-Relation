@@ -29,7 +29,7 @@ namespace EFCore_Session_Three_Relation.Models
 
         #region Reltion m  to m table Student_Course
         [InverseProperty(nameof(Student_Course.Course))]
-        public Student_Course? student_Course { set; get; }
+        public ICollection<Student_Course>? student_Course { set; get; }
         #endregion
     }
 
