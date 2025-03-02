@@ -53,7 +53,9 @@ namespace EFCore_Session_Three_Relation
             #region Set Primary Key for StudentCourse
             modelBuilder.Entity<Student_Course>().HasKey(s => new { s.StudentId, s.CourseId });
             #endregion
+
         }
+        //All Tables
         public DbSet<Student> students { get; set; }
         public DbSet<Department> departments { get; set; }
         public DbSet<Course> courses { get; set; }
